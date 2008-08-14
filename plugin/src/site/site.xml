@@ -1,0 +1,27 @@
+<project name="Eclipse Builder Pattern Plugin">
+   <publishDate position="left" format="dd.MM.yyyy hh:mm"/>
+   <bannerLeft>
+      <name>BOSS</name>
+      <src>http://boss.bekk.no/download/userResources/BOSS/logo</src>
+      <href>http://boss.bekk.no</href>
+   </bannerLeft>
+   <bannerRight>
+      <name>Eclipse IDE</name>
+      <src>images/eclipse_ready.jpg</src>
+      <href>http://eclipse.org</href>
+   </bannerRight>
+
+   <body>
+      <links>
+      	<item name="BEKK" href="http://www.bekk.no/"/>
+      	<item name="BOSS" href="http://boss.bekk.no"/>
+        <item name="Eclipse" href="http://www.eclipse.org"/>
+      </links>
+      <menu name="Builder Pattern Eclipse Plugin Docs">
+         <item name="Overview" href="index.html"/>
+         <item name="Installation" href="install.html" />
+         <item name="External resources" href="bibliography.html"/>
+      </menu>
+      ${reports}
+   </body>
+</project>
