@@ -1,0 +1,99 @@
+ -----
+ Overview 
+ -----
+ Rune Flobakk & Henning Jensen
+ -----
+
+Builder Pattern Eclipse Plugin
+
+ Project goal: 
+
+ * Automate the routine of implementing the builder pattern in a class
+
+ This is an open source project from the open source group in BEKK Consulting AS. 
+
+Installation
+
+    The plugin can be conveniently installed in your Eclipse IDE using the update site:
+
+        * {{{http://boss.bekk.no/bpep/update}http://boss.bekk.no/bpep/update}}
+
+What is Builder Pattern?
+
+ Joshua Bloch first announced this pattern to get rid of ugly constructors, constructor telescoping and to many setters required when creating objects. 
+The solution to these problems is to create a static inner class, preferably named Builder, inside the object you wish to create an instance of. The builder contains methods named with the same name as each object variable you wish to set in the final object. Each method return the instance of the Builder itself. This allows method chaining and a pretty neat syntax. Consider the following example:
+
++-------------------
+
+public class User {
+  private long id;
+  private String username;
+  private String firstname;
+  private String lastname;
+  private String email;
+
+  public static class Builder {
+    private long id;
+    private String username;
+    private String firstname;
+    private String lastname;
+    private String email;
+
+    public Builder id(long id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder username(String username) {
+      this.username = username;
+      return this;
+    }
+
+    public Builder firstname(String firstname) {
+      this.firstname = firstname;
+      return this;
+    }
+
+    public Builder lastname(String lastname) {
+      this.lastname = lastname;
+      return this;
+    }
+
+    public Builder email(String email) {
+      this.email = email;
+      return this;
+    }
+
+    public User build() {
+	return new User(this);
+    }
+  }
+
+  private User(Builder builder) {
+    this.id = builder.id;
+    this.username = builder.username;
+    this.firstname = builder.firstname;
+    this.lastname = builder.lastname;
+    this.email = builder.email;
+  }
+}
+
+
+public class UserCreator {
+  public static void main(String[] args) {
+
+    User user = new User.Builder().id(541).username("jsmith").email("john@smith.com").build();
+
+  }
+}
++-------------------
+ Not only does this pattern provide a flexible way of creating an instance of your objects. It also makes the object immutable and due to the private constructer you have to use the builder to create the object. You get rid of ugly setters and huge constructors. 
+
+ <<Resources:>>
+
+	* {{{http://developers.sun.com/learning/javaoneonline/2007/pdf/TS-2689.pdf}JavaOne 2007: Joshua Bloch - Effective Java Reloaded}}
+
+	* {{http://rwhansen.blogspot.com/2007/07/theres-builder-pattern-that-joshua.html}}
+
+	* {{http://www.softonaut.com/2007/01/10/thoughts-about-builder-pattern/}}
+
