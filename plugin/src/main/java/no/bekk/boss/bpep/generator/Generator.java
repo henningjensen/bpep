@@ -7,7 +7,7 @@ import org.eclipse.jdt.core.IField;
 
 public interface Generator {
     void generate(ICompilationUnit compilationUnit, boolean createBuilderConstructor, boolean formatSource, List<IField> selectedFields);
-    IField[] findAllFIelds(ICompilationUnit compilationUnit);
+    List<IField> findAllFIelds(ICompilationUnit compilationUnit);
     String getName(IField field);
     String getType(IField field);
 }

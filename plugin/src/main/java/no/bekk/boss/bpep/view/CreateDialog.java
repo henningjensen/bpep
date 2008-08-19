@@ -38,13 +38,13 @@ public class CreateDialog extends AbstractModalDialog {
         shell.setLayout(new GridLayout(2, false));
 
         Group fieldGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
-        fieldGroup.setText("Select fields to use in Builder:");
+        fieldGroup.setText("Select fields to include:");
         fieldGroup.setLayout(new RowLayout(SWT.VERTICAL));
         GridData fieldGroupLayoutData = new GridData();
         fieldGroupLayoutData.verticalSpan = 2;
 		fieldGroup.setLayoutData(fieldGroupLayoutData);
 
-        IField[] fields = generator.findAllFIelds(compilationUnit);
+        List<IField> fields = generator.findAllFIelds(compilationUnit);
         final List<Button> fieldButtons = new ArrayList<Button>();
         for(IField field: fields) {
         	Button button = new Button(fieldGroup, SWT.CHECK);
@@ -80,7 +80,7 @@ public class CreateDialog extends AbstractModalDialog {
         });
 
         Group optionGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
-        optionGroup.setText("Generator options:");
+        optionGroup.setText("Options:");
         optionGroup.setLayout(new RowLayout(SWT.VERTICAL));
         GridData optionGridData = new GridData();
         optionGridData.horizontalSpan = 2;
@@ -99,16 +99,16 @@ public class CreateDialog extends AbstractModalDialog {
         formatSourceButton.setText("Format source (entire file)");
         
         final Button executeButton = new Button(shell, SWT.PUSH);
-        executeButton.setText("Generate Builder");
-        GridData generateButtonGridData = new GridData();
-        generateButtonGridData.horizontalAlignment = SWT.BEGINNING;
-		executeButton.setLayoutData(generateButtonGridData);
+        executeButton.setText("Generate");
+//        GridData generateButtonGridData = new GridData();
+//        generateButtonGridData.horizontalAlignment = SWT.END;
+//		executeButton.setLayoutData(generateButtonGridData);
 
         final Button cancelButton = new Button(shell, SWT.PUSH);
         cancelButton.setText("Cancel");
-		GridData cancelButtonGridData = new GridData();
-		cancelButtonGridData.horizontalAlignment = SWT.END;
-		cancelButton.setLayoutData(cancelButtonGridData);
+//		GridData cancelButtonGridData = new GridData();
+//		cancelButtonGridData.horizontalAlignment = SWT.END;
+//		cancelButton.setLayoutData(cancelButtonGridData);
 
         Listener clickListener = new Listener() {
         	public void handleEvent(Event event) {

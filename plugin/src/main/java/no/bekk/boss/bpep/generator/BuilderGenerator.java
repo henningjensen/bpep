@@ -2,8 +2,10 @@ package no.bekk.boss.bpep.generator;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -124,11 +126,20 @@ public class BuilderGenerator implements Generator {
 		return null;
 	}
 
-	public IField[] findAllFIelds(ICompilationUnit compilationUnit) {
-		IField[] fields = null;
+	public List<IField> findAllFIelds(ICompilationUnit compilationUnit) {
+		List<IField> fields = new ArrayList<IField>();
 		try {
 			IType clazz = compilationUnit.getTypes()[0];
-			fields = clazz.getFields();
+			
+			for(IField field: clazz.getFields()) {
+				int flags = field.getFlags();
+				boolean notFinal = !Flags.isFinal(flags);
+				boolean notStatic = !Flags.isStatic(flags);
+				if (notFinal && notStatic) {
+					fields.add(field);
+				}
+			}
+			
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}

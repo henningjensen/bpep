@@ -16,8 +16,8 @@ public class MockGenerator implements Generator {
         }
 
     }
-
-	public IField[] findAllFIelds(ICompilationUnit compilationUnit) {
+    
+	public List<IField> findAllFIelds(ICompilationUnit compilationUnit) {
 		return null;
 	}
 
