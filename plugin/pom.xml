@@ -121,34 +121,11 @@
             <timezone>+1</timezone>
         </developer>
     </developers>
-    <distributionManagement>
-        <site>
-            <id>boss</id>
-            <url>scp://boss.bekk.no/srv/www/htdocs/bpep</url>
-        </site>
-        <repository>
-            <id>boss</id>
-            <url>
-                scp://boss.bekk.no/usr/local/jboss-4.0.4.GA/proximity/inhouse/storage
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>boss</id>
-            <url>
-                scp://boss.bekk.no/usr/local/jboss-4.0.4.GA/proximity/inhouse.snapshot/storage
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
     <pluginRepositories>
         <pluginRepository>
             <id>snapshot</id>
             <name>Snapshot repository</name>
             <url>http://snapshots.maven.codehaus.org/maven2/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>boss</id>
-            <name>BEKK Open Source Software Maven Repository</name>
-            <url>http://boss.bekk.no/proximity/repository/private</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -224,13 +201,4 @@
         </plugins>
     </reporting>
 
-    <scm>
-        <connection>
-            scm:svn:http://boss.bekk.no/repos/projects/builder-pattern-plugin/trunk
-        </connection>
-        <developerConnection>
-            scm:svn:https://boss.bekk.no/repos/projects/builder-pattern-plugin/trunk
-        </developerConnection>
-        <url>http://boss.bekk.no/repos/projects/builder-pattern-plugin/</url>
-    </scm>
 </project>
