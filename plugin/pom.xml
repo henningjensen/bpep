@@ -12,12 +12,7 @@
         Builder Pattern code generator plugin for the Eclipse IDE
     </description>
     <inceptionYear>2008</inceptionYear>
-    <url>http://boss.bekk.no/bpep/</url>
-    <organization>
-        <name>BEKK Consulting</name>
-        <url>http://www.bekk.no</url>
-    </organization>
-
+    <url>http://github.com/henningjensen/bpep/</url>
     <build>
         <resources>
             <resource>
@@ -26,6 +21,7 @@
             <resource>
                 <directory>src/test/resources</directory>
             </resource>
+            <!-- TODO: this causes eclipse to be confused about the build path.
             <resource>
                 <directory>../update-site</directory>
                 <targetPath>../../src/site/resources/update</targetPath>
@@ -34,6 +30,7 @@
                     <exclude>.settings</exclude>
                 </excludes>
             </resource>
+            -->
         </resources>
         <plugins>
             <plugin>
@@ -105,7 +102,7 @@
         <developer>
             <id>rune</id>
             <name>Rune Flobakk</name>
-            <email>rune.flobakk [at] bekk.no</email>
+            <email>flobakk [at] gmail.com</email>
             <roles>
                 <role>Developer</role>
             </roles>
@@ -114,7 +111,7 @@
         <developer>
             <id>henning</id>
             <name>Henning Jensen</name>
-            <email>henning.jensen [at] bekk.no</email>
+            <email>henning.jensen [at] gmail.com</email>
             <roles>
                 <role>Developer</role>
             </roles>
