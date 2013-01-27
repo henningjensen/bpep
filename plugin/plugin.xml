@@ -7,7 +7,6 @@
             targetID="#CompilationUnitEditorContext">
          <action
                class="no.bekk.boss.bpep.popup.actions.GenerateBuilderAction"
-               definitionId="bpep.invoke"
                id="bpep.popup.action.invoke"
                label="Generate Builder Pattern Code"
                menubarPath="org.eclipse.jdt.ui.source.menu/generateGroup">
