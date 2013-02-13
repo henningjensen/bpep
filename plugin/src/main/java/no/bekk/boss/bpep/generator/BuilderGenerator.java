@@ -22,6 +22,8 @@ import org.eclipse.text.edits.TextEdit;
 
 public class BuilderGenerator implements Generator {
 
+	private static final String BUILDER_METHOD_PARAMETER_SUFFIX = "Param";
+
 	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource, List<IField> fields) {
 
 		try {
@@ -139,8 +141,8 @@ public class BuilderGenerator implements Generator {
 		for (IField field : fields) {
 			String name = getName(field);
 			String type = getType(field);
-			pw.println("public Builder " + name + "(" + type + " " + name + ") {");
-			pw.println("this." + name + "=" + name + ";");
+			pw.println("public Builder " + name + "(" + type + " " + name + BUILDER_METHOD_PARAMETER_SUFFIX + ") {");
+			pw.println("this." + name + "=" + name + BUILDER_METHOD_PARAMETER_SUFFIX + ";");
 			pw.println("return this;\n}");
 		}
 	}
