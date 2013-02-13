@@ -25,19 +25,8 @@ public class BuilderGenerator implements Generator {
 	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource, List<IField> fields) {
 
 		try {
-			for (IMethod method : cu.getTypes()[0].getMethods()) {
-				if (method.isConstructor() && method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals("QBuilder;")) {
-					method.delete(true, null);
-					break;
-				}
-			}
-
-			for (IType type : cu.getTypes()[0].getTypes()) {
-				if (type.getElementName().equals("Builder") && type.isClass()) {
-					type.delete(true, null);
-					break;
-				}
-			}
+			removeOldClassConstructor(cu);
+			removeOldBuilderClass(cu);
 
 			IBuffer buffer = cu.getBuffer();
 			StringWriter sw = new StringWriter();
@@ -86,6 +75,24 @@ public class BuilderGenerator implements Generator {
 			e.printStackTrace();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void removeOldBuilderClass(ICompilationUnit cu) throws JavaModelException {
+		for (IType type : cu.getTypes()[0].getTypes()) {
+			if (type.getElementName().equals("Builder") && type.isClass()) {
+				type.delete(true, null);
+				break;
+			}
+		}
+	}
+
+	private void removeOldClassConstructor(ICompilationUnit cu) throws JavaModelException {
+		for (IMethod method : cu.getTypes()[0].getMethods()) {
+			if (method.isConstructor() && method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals("QBuilder;")) {
+				method.delete(true, null);
+				break;
+			}
 		}
 	}
 
