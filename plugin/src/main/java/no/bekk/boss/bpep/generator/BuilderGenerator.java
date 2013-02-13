@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -21,8 +22,14 @@ import org.eclipse.text.edits.TextEdit;
 
 public class BuilderGenerator implements Generator {
 
-	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean formatSource, List<IField> fields) {
+	private static final String BUILDER_METHOD_PARAMETER_SUFFIX = "Param";
+
+	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource, List<IField> fields) {
+
 		try {
+			removeOldClassConstructor(cu);
+			removeOldBuilderClass(cu);
+
 			IBuffer buffer = cu.getBuffer();
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
@@ -35,6 +42,10 @@ public class BuilderGenerator implements Generator {
 
 			createFieldDeclarations(pw, fields);
 
+			if (createCopyConstructor) {
+				createCopyConstructor(pw, clazz, fields);
+			}
+
 			createBuilderMethods(pw, fields);
 			if (createBuilderConstructor) {
 				createPrivateBuilderConstructor(pw, clazz, fields);
@@ -46,6 +57,7 @@ public class BuilderGenerator implements Generator {
 			}
 			
 			if (formatSource) {
+				pw.println();
 				buffer.replace(pos, 0, sw.toString());
 				String builderSource = buffer.getContents();
 			
@@ -68,9 +80,39 @@ public class BuilderGenerator implements Generator {
 		}
 	}
 
+	private void removeOldBuilderClass(ICompilationUnit cu) throws JavaModelException {
+		for (IType type : cu.getTypes()[0].getTypes()) {
+			if (type.getElementName().equals("Builder") && type.isClass()) {
+				type.delete(true, null);
+				break;
+			}
+		}
+	}
+
+	private void removeOldClassConstructor(ICompilationUnit cu) throws JavaModelException {
+		for (IMethod method : cu.getTypes()[0].getMethods()) {
+			if (method.isConstructor() && method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals("QBuilder;")) {
+				method.delete(true, null);
+				break;
+			}
+		}
+	}
+
+	private void createCopyConstructor(PrintWriter pw, IType clazz, List<IField> fields) {
+		String clazzName = clazz.getElementName();
+		pw.println("public Builder(){}");
+		pw.println("public Builder(" + clazzName + " bean){");
+		for (IField field : fields) {
+			pw.println("this." + getName(field) + "=bean." + getName(field)
+					+ ";");
+		}
+		pw.println("}");
+
+	}
+
 	private void createClassConstructor(PrintWriter pw, IType clazz, List<IField> fields) throws JavaModelException {
 		String clazzName = clazz.getElementName();
-		pw.println("private " + clazzName + "(Builder builder){");
+		pw.println(clazzName + "(Builder builder){");
 		for (IField field : fields) {
 			pw.println("this." + getName(field) + "=builder." + getName(field) + ";");
 		}
@@ -99,15 +141,15 @@ public class BuilderGenerator implements Generator {
 		for (IField field : fields) {
 			String name = getName(field);
 			String type = getType(field);
-			pw.println("public Builder " + name + "(" + type + " " + name + ") {");
-			pw.println("this." + name + "=" + name + ";");
+			pw.println("public Builder " + name + "(" + type + " " + name + BUILDER_METHOD_PARAMETER_SUFFIX + ") {");
+			pw.println("this." + name + "=" + name + BUILDER_METHOD_PARAMETER_SUFFIX + ";");
 			pw.println("return this;\n}");
 		}
 	}
 
 	private void createFieldDeclarations(PrintWriter pw, List<IField> fields) throws JavaModelException {
 		for (IField field : fields) {
-			pw.println("private " + getType(field) + " " + getName(field) + ";");
+			pw.println(getType(field) + " " + getName(field) + ";");
 		}
 	}
 
@@ -133,13 +175,12 @@ public class BuilderGenerator implements Generator {
 			
 			for(IField field: clazz.getFields()) {
 				int flags = field.getFlags();
-				boolean notFinal = !Flags.isFinal(flags);
 				boolean notStatic = !Flags.isStatic(flags);
-				if (notFinal && notStatic) {
+				if (notStatic) {
 					fields.add(field);
 				}
 			}
-			
+
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}

@@ -24,7 +24,6 @@ public class CreateDialog extends AbstractModalDialog {
 
     private Generator generator;
 
-
     public CreateDialog(Shell parent, Generator generator) {
         super(parent);
         this.generator = generator;
@@ -44,40 +43,9 @@ public class CreateDialog extends AbstractModalDialog {
         fieldGroupLayoutData.verticalSpan = 2;
 		fieldGroup.setLayoutData(fieldGroupLayoutData);
 
-        List<IField> fields = generator.findAllFIelds(compilationUnit);
-        final List<Button> fieldButtons = new ArrayList<Button>();
-        for(IField field: fields) {
-        	Button button = new Button(fieldGroup, SWT.CHECK);
-        	button.setText(generator.getName(field) + "(" + generator.getType(field) + ")");
-        	button.setData(field);
-        	button.setSelection(true);
-        	fieldButtons.add(button);
-        }
-
-        Button btnSelectAll = new Button(shell, SWT.PUSH);
-        btnSelectAll.setText("Select All");
-        GridData btnSelectAllLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
-        btnSelectAllLayoutData.verticalIndent = 10;
-		btnSelectAll.setLayoutData(btnSelectAllLayoutData);
-        btnSelectAll.addSelectionListener(new SelectionAdapter() {
-        	public void widgetSelected(SelectionEvent event) {
-        		for (Button button : fieldButtons) {
-					button.setSelection(true);
-				}
-        	}
-        });
-        Button btnSelectNone = new Button(shell, SWT.PUSH);
-        btnSelectNone.setText("Deselect All");
-        GridData selectNoneGridData = new GridData();
-        selectNoneGridData.verticalAlignment = SWT.BEGINNING;
-		btnSelectNone.setLayoutData(selectNoneGridData);
-        btnSelectNone.addSelectionListener(new SelectionAdapter() {
-        	public void widgetSelected(SelectionEvent event) {
-        		for (Button button : fieldButtons) {
-					button.setSelection(false);
-				}
-        	}
-        });
+        final List<Button> fieldButtons = createFieldSelectionCheckboxes(compilationUnit, fieldGroup);
+        createSelectAllButton(shell, fieldButtons);
+        createSelectNoneButton(shell, fieldButtons);
 
         Group optionGroup = new Group(shell, SWT.SHADOW_ETCHED_IN);
         optionGroup.setText("Options:");
@@ -87,12 +55,14 @@ public class CreateDialog extends AbstractModalDialog {
         optionGridData.horizontalAlignment = SWT.FILL;
 		optionGroup.setLayoutData(optionGridData);
 
-        final Button createPrivateClassConstructor = new Button(optionGroup, SWT.RADIO);
-        createPrivateClassConstructor.setSelection(true);
-        createPrivateClassConstructor.setText("Create private class constructor");
+        createCreateClassConstructorOption(optionGroup);
 
         final Button createBuilderConstructor = new Button(optionGroup, SWT.RADIO);
         createBuilderConstructor.setText("Create constructor in builder");
+
+        final Button createCopyConstructorButton = new Button(optionGroup, SWT.CHECK);
+        createCopyConstructorButton.setSelection(true);
+        createCopyConstructorButton.setText("Create copy constructor in builder");
 
         final Button formatSourceButton = new Button(optionGroup, SWT.CHECK);
         formatSourceButton.setSelection(true);
@@ -100,15 +70,10 @@ public class CreateDialog extends AbstractModalDialog {
         
         final Button executeButton = new Button(shell, SWT.PUSH);
         executeButton.setText("Generate");
-//        GridData generateButtonGridData = new GridData();
-//        generateButtonGridData.horizontalAlignment = SWT.END;
-//		executeButton.setLayoutData(generateButtonGridData);
+        shell.setDefaultButton(executeButton);
 
         final Button cancelButton = new Button(shell, SWT.PUSH);
         cancelButton.setText("Cancel");
-//		GridData cancelButtonGridData = new GridData();
-//		cancelButtonGridData.horizontalAlignment = SWT.END;
-//		cancelButton.setLayoutData(cancelButtonGridData);
 
         Listener clickListener = new Listener() {
         	public void handleEvent(Event event) {
@@ -121,7 +86,7 @@ public class CreateDialog extends AbstractModalDialog {
 						}
 					}
 
-        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), formatSourceButton.getSelection(), selectedFields);
+        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection(), selectedFields);
         			shell.dispose();
         		} else {
         			shell.dispose();
@@ -137,4 +102,52 @@ public class CreateDialog extends AbstractModalDialog {
         display(shell);
     }
 
+	private List<Button> createFieldSelectionCheckboxes(final ICompilationUnit compilationUnit, Group fieldGroup) {
+		List<IField> fields = generator.findAllFIelds(compilationUnit);
+		final List<Button> fieldButtons = new ArrayList<Button>();
+		for (IField field : fields) {
+			Button button = new Button(fieldGroup, SWT.CHECK);
+			button.setText(generator.getName(field) + "(" + generator.getType(field) + ")");
+			button.setData(field);
+			button.setSelection(true);
+			fieldButtons.add(button);
+		}
+		return fieldButtons;
+	}
+
+	private void createSelectAllButton(final Shell shell, final List<Button> fieldButtons) {
+		Button btnSelectAll = new Button(shell, SWT.PUSH);
+		btnSelectAll.setText("Select All");
+		GridData btnSelectAllLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
+		btnSelectAllLayoutData.verticalIndent = 10;
+		btnSelectAll.setLayoutData(btnSelectAllLayoutData);
+		btnSelectAll.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				for (Button button : fieldButtons) {
+					button.setSelection(true);
+				}
+			}
+		});
+	}
+
+	private void createSelectNoneButton(final Shell shell, final List<Button> fieldButtons) {
+		Button btnSelectNone = new Button(shell, SWT.PUSH);
+		btnSelectNone.setText("Deselect All");
+		GridData selectNoneGridData = new GridData();
+		selectNoneGridData.verticalAlignment = SWT.BEGINNING;
+		btnSelectNone.setLayoutData(selectNoneGridData);
+		btnSelectNone.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				for (Button button : fieldButtons) {
+					button.setSelection(false);
+				}
+			}
+		});
+	}
+
+	private void createCreateClassConstructorOption(Group optionGroup) {
+		final Button createClassConstructor = new Button(optionGroup, SWT.RADIO);
+		createClassConstructor.setSelection(true);
+		createClassConstructor.setText("Create class constructor");
+	}
 }
