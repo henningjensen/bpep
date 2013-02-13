@@ -149,7 +149,7 @@ public class BuilderGenerator implements Generator {
 
 	private void createFieldDeclarations(PrintWriter pw, List<IField> fields) throws JavaModelException {
 		for (IField field : fields) {
-			pw.println("private " + getType(field) + " " + getName(field) + ";");
+			pw.println(getType(field) + " " + getName(field) + ";");
 		}
 	}
 
