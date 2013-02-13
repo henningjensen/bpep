@@ -112,7 +112,7 @@ public class BuilderGenerator implements Generator {
 
 	private void createClassConstructor(PrintWriter pw, IType clazz, List<IField> fields) throws JavaModelException {
 		String clazzName = clazz.getElementName();
-		pw.println("private " + clazzName + "(Builder builder){");
+		pw.println(clazzName + "(Builder builder){");
 		for (IField field : fields) {
 			pw.println("this." + getName(field) + "=builder." + getName(field) + ";");
 		}

@@ -87,9 +87,9 @@ public class CreateDialog extends AbstractModalDialog {
         optionGridData.horizontalAlignment = SWT.FILL;
 		optionGroup.setLayoutData(optionGridData);
 
-        final Button createPrivateClassConstructor = new Button(optionGroup, SWT.RADIO);
-        createPrivateClassConstructor.setSelection(true);
-        createPrivateClassConstructor.setText("Create private class constructor");
+        final Button createClassConstructor = new Button(optionGroup, SWT.RADIO);
+        createClassConstructor.setSelection(true);
+        createClassConstructor.setText("Create class constructor");
 
         final Button createBuilderConstructor = new Button(optionGroup, SWT.RADIO);
         createBuilderConstructor.setText("Create constructor in builder");
