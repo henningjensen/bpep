@@ -94,6 +94,10 @@ public class CreateDialog extends AbstractModalDialog {
         final Button createBuilderConstructor = new Button(optionGroup, SWT.RADIO);
         createBuilderConstructor.setText("Create constructor in builder");
 
+        final Button createCopyConstructorButton = new Button(optionGroup, SWT.CHECK);
+        createCopyConstructorButton.setSelection(true);
+        createCopyConstructorButton.setText("Create copy constructor in builder");
+
         final Button formatSourceButton = new Button(optionGroup, SWT.CHECK);
         formatSourceButton.setSelection(true);
         formatSourceButton.setText("Format source (entire file)");
@@ -103,6 +107,7 @@ public class CreateDialog extends AbstractModalDialog {
 //        GridData generateButtonGridData = new GridData();
 //        generateButtonGridData.horizontalAlignment = SWT.END;
 //		executeButton.setLayoutData(generateButtonGridData);
+        shell.setDefaultButton(executeButton);
 
         final Button cancelButton = new Button(shell, SWT.PUSH);
         cancelButton.setText("Cancel");
@@ -121,7 +126,7 @@ public class CreateDialog extends AbstractModalDialog {
 						}
 					}
 
-        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), formatSourceButton.getSelection(), selectedFields);
+        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection(), selectedFields);
         			shell.dispose();
         		} else {
         			shell.dispose();

@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -21,8 +22,23 @@ import org.eclipse.text.edits.TextEdit;
 
 public class BuilderGenerator implements Generator {
 
-	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean formatSource, List<IField> fields) {
+	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource, List<IField> fields) {
+
 		try {
+			for (IMethod method : cu.getTypes()[0].getMethods()) {
+				if (method.isConstructor() && method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals("QBuilder;")) {
+					method.delete(true, null);
+					break;
+				}
+			}
+
+			for (IType type : cu.getTypes()[0].getTypes()) {
+				if (type.getElementName().equals("Builder") && type.isClass()) {
+					type.delete(true, null);
+					break;
+				}
+			}
+
 			IBuffer buffer = cu.getBuffer();
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
@@ -35,6 +51,10 @@ public class BuilderGenerator implements Generator {
 
 			createFieldDeclarations(pw, fields);
 
+			if (createCopyConstructor) {
+				createCopyConstructor(pw, clazz, fields);
+			}
+
 			createBuilderMethods(pw, fields);
 			if (createBuilderConstructor) {
 				createPrivateBuilderConstructor(pw, clazz, fields);
@@ -46,6 +66,7 @@ public class BuilderGenerator implements Generator {
 			}
 			
 			if (formatSource) {
+				pw.println();
 				buffer.replace(pos, 0, sw.toString());
 				String builderSource = buffer.getContents();
 			
@@ -66,6 +87,18 @@ public class BuilderGenerator implements Generator {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void createCopyConstructor(PrintWriter pw, IType clazz, List<IField> fields) {
+		String clazzName = clazz.getElementName();
+		pw.println("public Builder(){}");
+		pw.println("public Builder(" + clazzName + " bean){");
+		for (IField field : fields) {
+			pw.println("this." + getName(field) + "=bean." + getName(field)
+					+ ";");
+		}
+		pw.println("}");
+
 	}
 
 	private void createClassConstructor(PrintWriter pw, IType clazz, List<IField> fields) throws JavaModelException {
@@ -133,13 +166,12 @@ public class BuilderGenerator implements Generator {
 			
 			for(IField field: clazz.getFields()) {
 				int flags = field.getFlags();
-				boolean notFinal = !Flags.isFinal(flags);
 				boolean notStatic = !Flags.isStatic(flags);
-				if (notFinal && notStatic) {
+				if (notStatic) {
 					fields.add(field);
 				}
 			}
-			
+
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
