@@ -13,18 +13,39 @@
          </action>
       </viewerContribution>
    </extension>
-<!--
+   <extension
+		point="org.eclipse.ui.actionSets">
+		<actionSet
+			label="Java Coding"
+			description="Action set containing coding related Java actions"
+			visible="true"
+			id="org.eclipse.jdt.ui.CodingActionSet2">
+			<menu
+				label="&amp;Source"
+				path="edit"
+				id="org.eclipse.jdt.ui.source.menu">
+			</menu>
+		<action
+			class="no.bekk.boss.bpep.popup.actions.GenerateBuilderAction"
+			definitionId="bpep.invoke"
+			id="bpep.popup.action.invoke"
+			label="Generate Builder Pattern Code"
+			menubarPath="org.eclipse.jdt.ui.source.menu/generateGroup">
+		</action>
+	</actionSet>
+	</extension>
    <extension point="org.eclipse.ui.bindings">
-      <key commandId="bpep.generatebuilder"
-           schemeId="default"
-           sequence="CTRL+ALT+O">
+      <key commandId="bpep.invoke"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="CTRL+ALT+B">
       </key>
    </extension>
    <extension point="org.eclipse.ui.commands">
-      <command id="bpep.generatebuilder"
+      <command id="bpep.invoke"
                name="Generate Builder Pattern">
       </command>
    </extension>
+   <!--
    <extension
          id="bpep.generatebuilder.actions"
          name="Generate Builder Code Action"
@@ -32,14 +53,17 @@
          <actionSet id="bpep.actionset"
             label="BPEP Actions"
             visible="true">
+            <menu
+				label="&amp;Source"
+				path="edit"
+				id="org.eclipse.jdt.ui.source.menu">
+			</menu>
             <action id="bpep.generatebuilder"
                 label="Generate Builder Pattern"
-                toolbarPath="org.eclipse.ui.workbench.file/new.ext"
                 icon="src/main/resources/icons/bpep.gif"
-                tooltip="Create Builder Pttern"
+                tooltip="Generate Builder Pattern Code"
                 class="no.bekk.boss.bpep.popup.actions.GenerateBuilderAction">
             </action>
          </actionSet>
-   </extension>
--->
+   </extension>-->
 </plugin>
