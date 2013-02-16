@@ -184,7 +184,7 @@ public class BuilderGenerator implements Generator {
 		return null;
 	}
 
-	public List<IField> findAllFIelds(ICompilationUnit compilationUnit) {
+	public List<IField> findAllFields(ICompilationUnit compilationUnit) {
 		List<IField> fields = new ArrayList<IField>();
 		try {
 			IType clazz = compilationUnit.getTypes()[0];
