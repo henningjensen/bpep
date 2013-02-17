@@ -1,6 +1,5 @@
 package no.bekk.boss.bpep.popup.actions;
 
-import no.bekk.boss.bpep.generator.BuilderGenerator;
 import no.bekk.boss.bpep.view.CreateDialog;
 
 import org.eclipse.core.runtime.CoreException;
@@ -33,7 +32,7 @@ public class GenerateBuilderAction extends Action implements IEditorActionDelega
 			manager.connect(editorInput);
 			ICompilationUnit workingCopy = manager.getWorkingCopy(editorInput);
 
-			CreateDialog dialog = new CreateDialog(new Shell(), new BuilderGenerator());
+			CreateDialog dialog = new CreateDialog(new Shell());
 			dialog.show(workingCopy);
 
 			synchronized (workingCopy) {

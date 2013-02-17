@@ -3,7 +3,9 @@ package no.bekk.boss.bpep.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.bekk.boss.bpep.generator.BuilderGenerator;
 import no.bekk.boss.bpep.generator.Generator;
+import no.bekk.boss.bpep.resolver.Resolver;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -22,11 +24,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class CreateDialog extends AbstractModalDialog {
 
-    private Generator generator;
-
-    public CreateDialog(Shell parent, Generator generator) {
+    public CreateDialog(Shell parent) {
         super(parent);
-        this.generator = generator;
     }
 
     public void show(final ICompilationUnit compilationUnit) throws JavaModelException {
@@ -86,7 +85,12 @@ public class CreateDialog extends AbstractModalDialog {
 						}
 					}
 
-        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection(), selectedFields);
+					Generator generator = new BuilderGenerator.Builder() //
+							.createBuilderConstructor(createBuilderConstructor.getSelection()) //
+							.createCopyConstructor(createCopyConstructorButton.getSelection()) //
+							.formatSource(formatSourceButton.getSelection()) //
+							.build();
+					generator.generate(compilationUnit, selectedFields);
         			shell.dispose();
         		} else {
         			shell.dispose();
@@ -103,11 +107,11 @@ public class CreateDialog extends AbstractModalDialog {
     }
 
 	private List<Button> createFieldSelectionCheckboxes(final ICompilationUnit compilationUnit, Group fieldGroup) {
-		List<IField> fields = generator.findAllFields(compilationUnit);
+		List<IField> fields = Resolver.findAllFields(compilationUnit);
 		final List<Button> fieldButtons = new ArrayList<Button>();
 		for (IField field : fields) {
 			Button button = new Button(fieldGroup, SWT.CHECK);
-			button.setText(generator.getName(field) + "(" + generator.getType(field) + ")");
+			button.setText(Resolver.getName(field) + "(" + Resolver.getType(field) + ")");
 			button.setData(field);
 			button.setSelection(true);
 			fieldButtons.add(button);
