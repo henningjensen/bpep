@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.bekk.boss.bpep.generator.Generator;
+import no.bekk.boss.bpep.resolver.Resolver;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -103,11 +104,11 @@ public class CreateDialog extends AbstractModalDialog {
     }
 
 	private List<Button> createFieldSelectionCheckboxes(final ICompilationUnit compilationUnit, Group fieldGroup) {
-		List<IField> fields = generator.findAllFields(compilationUnit);
+		List<IField> fields = Resolver.findAllFields(compilationUnit);
 		final List<Button> fieldButtons = new ArrayList<Button>();
 		for (IField field : fields) {
 			Button button = new Button(fieldGroup, SWT.CHECK);
-			button.setText(generator.getName(field) + "(" + generator.getType(field) + ")");
+			button.setText(Resolver.getName(field) + "(" + Resolver.getType(field) + ")");
 			button.setData(field);
 			button.setSelection(true);
 			fieldButtons.add(button);

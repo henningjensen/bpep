@@ -1,12 +1,13 @@
 package no.bekk.boss.bpep.generator;
 
+import static no.bekk.boss.bpep.resolver.Resolver.getName;
+import static no.bekk.boss.bpep.resolver.Resolver.getType;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
@@ -16,7 +17,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.NamingConventions;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
@@ -167,40 +167,6 @@ public class BuilderGenerator implements Generator {
 		for (IField field : fields) {
 			pw.println(getType(field) + " " + getName(field) + ";");
 		}
-	}
-
-	public String getName(IField field) {
-		return field.getElementName();
-	}
-
-	public String getType(IField field) {
-		try {
-			return Signature.toString(field.getTypeSignature());
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public List<IField> findAllFields(ICompilationUnit compilationUnit) {
-		List<IField> fields = new ArrayList<IField>();
-		try {
-			IType clazz = compilationUnit.getTypes()[0];
-			
-			for(IField field: clazz.getFields()) {
-				int flags = field.getFlags();
-				boolean notStatic = !Flags.isStatic(flags);
-				if (notStatic) {
-					fields.add(field);
-				}
-			}
-
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
-		return fields;
 	}
 
 }
