@@ -103,7 +103,7 @@ public class CreateDialog extends AbstractModalDialog {
     }
 
 	private List<Button> createFieldSelectionCheckboxes(final ICompilationUnit compilationUnit, Group fieldGroup) {
-		List<IField> fields = generator.findAllFIelds(compilationUnit);
+		List<IField> fields = generator.findAllFields(compilationUnit);
 		final List<Button> fieldButtons = new ArrayList<Button>();
 		for (IField field : fields) {
 			Button button = new Button(fieldGroup, SWT.CHECK);
@@ -121,13 +121,7 @@ public class CreateDialog extends AbstractModalDialog {
 		GridData btnSelectAllLayoutData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		btnSelectAllLayoutData.verticalIndent = 10;
 		btnSelectAll.setLayoutData(btnSelectAllLayoutData);
-		btnSelectAll.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				for (Button button : fieldButtons) {
-					button.setSelection(true);
-				}
-			}
-		});
+		btnSelectAll.addSelectionListener(new FieldSelectionAdapter(fieldButtons, true));
 	}
 
 	private void createSelectNoneButton(final Shell shell, final List<Button> fieldButtons) {
@@ -136,18 +130,29 @@ public class CreateDialog extends AbstractModalDialog {
 		GridData selectNoneGridData = new GridData();
 		selectNoneGridData.verticalAlignment = SWT.BEGINNING;
 		btnSelectNone.setLayoutData(selectNoneGridData);
-		btnSelectNone.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				for (Button button : fieldButtons) {
-					button.setSelection(false);
-				}
-			}
-		});
+		btnSelectNone.addSelectionListener(new FieldSelectionAdapter(fieldButtons, false));
 	}
 
 	private void createCreateClassConstructorOption(Group optionGroup) {
 		final Button createClassConstructor = new Button(optionGroup, SWT.RADIO);
 		createClassConstructor.setSelection(true);
 		createClassConstructor.setText("Create class constructor");
+	}
+	
+	private class FieldSelectionAdapter extends SelectionAdapter {
+		private final List<Button> buttons;
+		private final boolean checked;
+
+		public FieldSelectionAdapter(final List<Button> buttons, final boolean checked) {
+			this.buttons = buttons;
+			this.checked = checked;
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			for (Button button : buttons) {
+				button.setSelection(checked);
+			}
+		}
 	}
 }

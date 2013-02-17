@@ -1,5 +1,6 @@
 package no.bekk.boss.bpep.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -17,8 +18,8 @@ public class MockGenerator implements Generator {
 
     }
     
-	public List<IField> findAllFIelds(ICompilationUnit compilationUnit) {
-		return null;
+	public List<IField> findAllFields(ICompilationUnit compilationUnit) {
+		return new ArrayList<IField>();
 	}
 
 	public String getName(IField field) {
