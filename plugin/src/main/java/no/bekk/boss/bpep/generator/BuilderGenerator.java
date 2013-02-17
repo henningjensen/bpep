@@ -31,14 +31,6 @@ public class BuilderGenerator implements Generator {
 	private final boolean createBuilderConstructor;
 	private final boolean createCopyConstructor;
 	private final boolean formatSource;
-	private final IJavaProject javaProject;
-
-	public BuilderGenerator(boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource) {
-		this.createBuilderConstructor = createBuilderConstructor;
-		this.createCopyConstructor = createCopyConstructor;
-		this.formatSource = formatSource;
-		javaProject = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getProject());
-	}
 
 	public void generate(ICompilationUnit cu, List<IField> fields) {
 
@@ -166,6 +158,7 @@ public class BuilderGenerator implements Generator {
 	}
 
 	private String getFieldBaseName(String fieldName) {
+		IJavaProject javaProject = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getProject());
 		return NamingConventions.getBaseName(NamingConventions.VK_INSTANCE_FIELD, fieldName, javaProject);
 	}
 
@@ -175,4 +168,34 @@ public class BuilderGenerator implements Generator {
 		}
 	}
 
+	public static class Builder {
+		boolean createBuilderConstructor;
+		boolean createCopyConstructor;
+		boolean formatSource;
+
+		public Builder createBuilderConstructor(boolean createBuilderConstructorParam) {
+			this.createBuilderConstructor = createBuilderConstructorParam;
+			return this;
+		}
+
+		public Builder createCopyConstructor(boolean createCopyConstructorParam) {
+			this.createCopyConstructor = createCopyConstructorParam;
+			return this;
+		}
+
+		public Builder formatSource(boolean formatSourceParam) {
+			this.formatSource = formatSourceParam;
+			return this;
+		}
+
+		public BuilderGenerator build() {
+			return new BuilderGenerator(this);
+		}
+	}
+
+	BuilderGenerator(Builder builder) {
+		this.createBuilderConstructor = builder.createBuilderConstructor;
+		this.createCopyConstructor = builder.createCopyConstructor;
+		this.formatSource = builder.formatSource;
+	}
 }

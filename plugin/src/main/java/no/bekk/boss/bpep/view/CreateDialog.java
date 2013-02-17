@@ -85,7 +85,11 @@ public class CreateDialog extends AbstractModalDialog {
 						}
 					}
 
-					Generator generator = new BuilderGenerator(createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection());
+					Generator generator = new BuilderGenerator.Builder() //
+							.createBuilderConstructor(createBuilderConstructor.getSelection()) //
+							.createCopyConstructor(createCopyConstructorButton.getSelection()) //
+							.formatSource(formatSourceButton.getSelection()) //
+							.build();
 					generator.generate(compilationUnit, selectedFields);
         			shell.dispose();
         		} else {
