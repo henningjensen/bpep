@@ -28,13 +28,19 @@ public class BuilderGenerator implements Generator {
 
 	private static final String BUILDER_METHOD_PARAMETER_SUFFIX = "Param";
 
+	private final boolean createBuilderConstructor;
+	private final boolean createCopyConstructor;
+	private final boolean formatSource;
 	private final IJavaProject javaProject;
 
-	public BuilderGenerator() {
+	public BuilderGenerator(boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource) {
+		this.createBuilderConstructor = createBuilderConstructor;
+		this.createCopyConstructor = createCopyConstructor;
+		this.formatSource = formatSource;
 		javaProject = JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getProject());
 	}
 
-	public void generate(ICompilationUnit cu, boolean createBuilderConstructor, boolean createCopyConstructor, boolean formatSource, List<IField> fields) {
+	public void generate(ICompilationUnit cu, List<IField> fields) {
 
 		try {
 			removeOldClassConstructor(cu);

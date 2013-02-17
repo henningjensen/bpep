@@ -3,6 +3,7 @@ package no.bekk.boss.bpep.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.bekk.boss.bpep.generator.BuilderGenerator;
 import no.bekk.boss.bpep.generator.Generator;
 import no.bekk.boss.bpep.resolver.Resolver;
 
@@ -23,11 +24,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class CreateDialog extends AbstractModalDialog {
 
-    private Generator generator;
-
-    public CreateDialog(Shell parent, Generator generator) {
+    public CreateDialog(Shell parent) {
         super(parent);
-        this.generator = generator;
     }
 
     public void show(final ICompilationUnit compilationUnit) throws JavaModelException {
@@ -87,7 +85,8 @@ public class CreateDialog extends AbstractModalDialog {
 						}
 					}
 
-        			generator.generate(compilationUnit, createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection(), selectedFields);
+					Generator generator = new BuilderGenerator(createBuilderConstructor.getSelection(), createCopyConstructorButton.getSelection(), formatSourceButton.getSelection());
+					generator.generate(compilationUnit, selectedFields);
         			shell.dispose();
         		} else {
         			shell.dispose();
